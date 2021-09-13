@@ -48,6 +48,7 @@ var points = 0;
 var answers;
 var btn;
 var li;
+var questionSelected;
 var allScores = [];
 
 function startGame() {
@@ -69,50 +70,78 @@ function startTimer(){
             // Clears interval
             clearInterval(timer);
             finishGame();
+            return;
         }
     }, 1000);
 }
 
-// TO BE FIXED
+// WORKING FINE
 function startQuiz() {
-    
-    var questionSelected = questionArray[questionIndex];
+    // We first get the fisrt question from the array and increment index
+    questionSelected = questionArray[questionIndex];
     questionIndex++;
+
+    // Write the question to show on screen
     questionId.textContent = questionSelected.question;
 
+    // Create 4 options to answer the question, we add data-index to indetify the correct answer
     liAlternatives.forEach(function(element, index) {
-
         var btn = document.createElement("BUTTON");
         btn.textContent = questionSelected.answers[index];
+        btn.dataset.index = index;
         element.appendChild(btn);
     })        
 
+    // Create a button for each li and we check if the one clicked is correct
     liAlternatives.forEach(function(element, index) {
         element.addEventListener("click", function() {
-            if(questionSelected.correctAnswer == index) {
-                points = points + 10;
-                removeChildren();
-                startQuiz();
-            }else{
-                if(timerCount <=5){
-                    finishGame();
-                    return;
-                }else{
-                    timerCount -=5;
-                }
-            }
+           if(questionSelected.correctAnswer == index){
+               console.log("respuesta correcta");
+               points +=10;
+               setNextQuestion();
+           }else{
+               console.log("respuesta NO CORRECTA");
+               if(timerCount <= 5){
+                   finishGame();
+                   return;
+               }else{
+                   timerCount -=5;
+               }
+           }
         })
     })
 }
 
-function removeChildren() {
-    liAlternatives.forEach(function(element, index) {
+// WORKING FINE
+function setNextQuestion() {
+    questionSelected = questionArray[questionIndex];
+
+    //Check if this was the last question, if it is finish the quiz to show score
+    if(questionSelected === undefined){
+        finishGame();
+        return;
+    }
+    questionIndex++;
+
+    // Remove all buttons created prevoiusly
+    liAlternatives.forEach(function(element, index){
         element.removeChild(element.firstChild);
     })
+
+    // Write the question to show on screen
+    questionId.textContent = questionSelected.question;
+
+    // Create 4 options to answer the question, we add data-index to indetify the correct answer
+    liAlternatives.forEach(function(element, index) {
+        var btn = document.createElement("BUTTON");
+        btn.textContent = questionSelected.answers[index];
+        btn.dataset.index = index;
+        element.appendChild(btn);
+    })   
 }
 
-
-function finishGame() {
+function finishGame(event) {
+    clearInterval(timer); //WORKING GOOD
 
     questionsElement.style.display = "none";
     registerScoresElement.style.display = "block";
@@ -120,13 +149,14 @@ function finishGame() {
 
     finalScoreElement.textContent = "Congratulations on finishing this Quiz. Your Score is: "+ points;
 
+    // THIS NEED TO BE FIXED
     submitBtn.addEventListener("click", function() {
-
         saveLastScore();
         renderScores();
     })
 }
 
+// TODO
 function saveLastScore() {
     var player = {
         name: inputElement,
@@ -137,6 +167,7 @@ function saveLastScore() {
     allScores.push(player);
 };
 
+// TODO
 function renderScores() {
 
     for (var i = 0; i < allScores.length; i++) {
