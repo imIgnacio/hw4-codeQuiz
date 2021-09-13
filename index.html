@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="icon" type="imgage/png" href="assets/images/LogoIgnacioDiaz.png" sizes="16x16"/>
-    <link rel="icon" type="imgage/png" href="assets/images/LogoIgnacioDiaz.png" sizes="32x32"/>
+    <link rel="icon" type="imgage/png" href="./assets/images/IMG_6858.PNG" sizes="16x16"/>
+    <link rel="icon" type="imgage/png" href="./assets/images/IMG_6858.PNG" sizes="32x32"/>
     <title>Code Quiz</title>
 </head>
 <body>
@@ -26,14 +26,24 @@
         </div>
         <div class="questions-div">
             <h2 id="question"></h2>
-            <ul id="answers"></ul>
+            <ul id="answers">
+                <li class="alternatives"></li>
+                <li class="alternatives"></li>
+                <li class="alternatives"></li>
+                <li class="alternatives"></li>
+            </ul>
         </div>
         <div class="button-start">
             <button id="start-btn">Start</button>
         </div>
+        <div class="register-score">
+            <h2 id="final-score"></h2>
+            <input type="text" id="name" name="name" placeholder="Your name Here">
+            <button class="submit">Submit</button>
+        </div>
         <div class="highscores">
             <h2>Leaderboard</h2>
-            <ul>
+            <ul class="scores">
 
             </ul>
         </div>
