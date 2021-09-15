@@ -10,6 +10,6 @@ also timer starts.
 
 When user answers all questions or timer goes to 0, web page will show user score and a leaderboard.
 
-![alt text]
+![alt text](https://github.com/imIgnacio/hw4-codeQuiz/blob/main/assets/images/screenshot.PNG)
 
-![alt text]
+![alt text](https://github.com/imIgnacio/hw4-codeQuiz/blob/main/assets/images/screenshot2.PNG)
