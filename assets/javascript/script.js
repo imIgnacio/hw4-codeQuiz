@@ -38,16 +38,13 @@ var questionId = document.querySelector("#question");
 var liAlternatives = document.querySelectorAll(".alternatives");
 var registerScoresElement = document.querySelector(".register-score");
 var finalScoreElement = document.querySelector("#final-score");
-var submitBtn = document.querySelector(".submit");
 var scoreList = document.querySelector(".scores");
-var inputElement = document.getElementById("name").value;
+var inputElement = document.getElementById("name");
+var submitForm = document.querySelector(".submit-form");
 
 var questionIndex = 0;
 var timerCount = 61;
 var points = 0;
-var answers;
-var btn;
-var li;
 var questionSelected;
 var allScores = [];
 
@@ -96,11 +93,9 @@ function startQuiz() {
     liAlternatives.forEach(function(element, index) {
         element.addEventListener("click", function() {
            if(questionSelected.correctAnswer == index){
-               console.log("respuesta correcta");
                points +=10;
                setNextQuestion();
            }else{
-               console.log("respuesta NO CORRECTA");
                if(timerCount <= 5){
                    finishGame();
                    return;
@@ -140,53 +135,63 @@ function setNextQuestion() {
     })   
 }
 
-function finishGame(event) {
-    clearInterval(timer); //WORKING GOOD
+function finishGame() {
+    // Finalize timer
+    clearInterval(timer);
 
+    // Display register score form and leaderboard
     questionsElement.style.display = "none";
     registerScoresElement.style.display = "block";
     highscores.style.display = "flex";
 
     finalScoreElement.textContent = "Congratulations on finishing this Quiz. Your Score is: "+ points;
 
-    // THIS NEED TO BE FIXED
-    submitBtn.addEventListener("click", function() {
-        saveLastScore();
-        renderScores();
+    // Get player name and save it. Also render it on screen
+    submitForm.addEventListener("submit", function(event) {
+        var lastPlayer = saveLastScore();
+        
+        if(lastPlayer === -1){
+            return;
+        }
+
+        localStorage.setItem("playerScore", JSON.stringify(lastPlayer));
+        allScores.push(JSON.stringify(lastPlayer));
+
+        playerName = "";
+        points = 0;
+        event.preventDefault();
+        renderLastScore();
+        return;
     })
+    return;
 }
 
-// TODO
+// Function to save player's name
 function saveLastScore() {
-    var player = {
-        name: inputElement,
+    var playerInput = inputElement.value;
+    if(playerInput == ""){
+        return -1;
+    }
+    var lastPlayer = {
+        name: playerInput,
         score: points,
     }
 
-    localStorage.setItem("playerScore", JSON.stringify(player));
-    allScores.push(player);
+    return lastPlayer;
 };
 
-// TODO
-function renderScores() {
+// Function to render score
+function renderLastScore() {
+    var lastScore = JSON.parse(localStorage.getItem("playerScore"));
+    var li = document.createElement("li");
 
-    for (var i = 0; i < allScores.length; i++) {
-        var todo = allScores[i];
-    
-        var li = document.createElement("li");
-        li.textContent = todo.name + ": " + todo.score;
-        li.setAttribute("data-index", i);
-    
-        scoreList.appendChild(li);
-      }
-  }
-
-
+    li.textContent = lastScore.name + ": " + lastScore.score;
+    scoreList.appendChild(li);
+    return;
+}
 
 // Program starts here
-renderScores();
-
 registerScoresElement.style.display = "none";
+highscores.style.display = "none";
 startButton.addEventListener("click", startGame);
 
-saveLastScore();
